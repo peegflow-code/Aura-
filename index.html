@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AURA | Arquitetura e Design de Interiores</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --aura-beige:#f9f7f2;
+      --aura-brown:#5d4d42;
+      --aura-green:#8da491;
+      --aura-text:#333333;
+    }
+
+    body{
+      font-family:'Montserrat', sans-serif;
+      background-color:var(--aura-beige);
+      color:var(--aura-text);
+      scroll-behavior:smooth;
+      background-image:url('https://www.transparenttextures.com/patterns/linen.png');
+    }
+
+    h1,h2,h3,.serif{ font-family:'Playfair Display', serif; }
+
+    .hero-gradient{
+      background:linear-gradient(rgba(0,0,0,0.25), rgba(0,0,0,0.65));
+    }
+
+    .project-card{ transition:all 0.3s ease; }
+    .project-card img{ transition:transform 0.6s cubic-bezier(0.165,0.84,0.44,1); }
+    .project-card:hover img{ transform:scale(1.08); }
+
+    .nav-link::after{
+      content:'';
+      display:block;
+      width:0;
+      height:1px;
+      background:var(--aura-brown);
+      transition:width .3s;
+    }
+    .nav-link:hover::after{ width:100%; }
+
+    #modal{
+      display:none;
+      position:fixed;
+      z-index:1000;
+      inset:0;
+      background:rgba(0,0,0,0.98);
+      justify-content:center;
+      align-items:center;
+      backdrop-filter:blur(5px);
+    }
+
+    /* Loading state */
+    .img-container{
+      background-color:#eee;
+      position:relative;
+      overflow:hidden;
+    }
+    .img-container::before{
+      content:"A carregar...";
+      position:absolute;
+      top:50%;
+      left:50%;
+      transform:translate(-50%,-50%);
+      font-size:10px;
+      text-transform:uppercase;
+      letter-spacing:2px;
+      color:#999;
+      z-index:1;
+    }
+    .img-container img{
+      position:relative;
+      z-index:2;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Header / Navigation -->
+  <header class="fixed w-full z-50 bg-white/80 backdrop-blur-lg border-b border-gray-100">
+    <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+      <div class="flex items-center gap-3">
+        <img
+          src="./logo-aura.png"
+          alt="AURA Logo"
+          class="h-10 w-auto"
+          onerror="this.style.display='none'; this.nextElementSibling.style.display='block'"
+        />
+        <span class="serif text-2xl tracking-[0.2em] text-[var(--aura-brown)] hidden">AURA</span>
+      </div>
+
+      <nav class="hidden md:flex space-x-10 text-[10px] tracking-[0.3em] uppercase font-bold">
+        <a href="#inicio" class="nav-link text-[var(--aura-brown)]">Início</a>
+        <a href="#sobre" class="nav-link text-[var(--aura-brown)]">A Aura</a>
+        <a href="#projetos" class="nav-link text-[var(--aura-brown)]">Projetos</a>
+        <a href="#contato" class="nav-link text-[var(--aura-brown)]">Contacto</a>
+      </nav>
+
+      <button class="md:hidden text-[var(--aura-brown)]" id="mobile-menu-btn" aria-label="Abrir menu">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 8h16M4 16h16" />
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="fixed inset-0 bg-white z-[60] flex flex-col items-center justify-center space-y-8 text-xl uppercase tracking-widest hidden">
+    <button class="absolute top-6 right-6" id="close-menu" aria-label="Fechar menu">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-[var(--aura-brown)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+    <a href="#inicio" class="mobile-link serif">Início</a>
+    <a href="#sobre" class="mobile-link serif">Sobre</a>
+    <a href="#projetos" class="mobile-link serif">Projetos</a>
+    <a href="#contato" class="mobile-link serif">Contacto</a>
+  </div>
+
+  <!-- Hero Section -->
+  <section id="inicio" class="relative h-[90vh] flex items-center justify-center overflow-hidden">
+    <img src="./hero-fachada-residencial-noturna.jpg" alt="Fachada residencial noturna" class="absolute w-full h-full object-cover" id="hero-img">
+    <div class="absolute inset-0 hero-gradient"></div>
+    <div class="relative z-10 text-center text-white px-4">
+      <h1 class="text-7xl md:text-9xl mb-6 opacity-0 transition-all duration-1000 transform translate-y-10" id="hero-title">AURA</h1>
+      <p class="text-xs md:text-sm tracking-[0.6em] uppercase opacity-0 transition-all duration-1000 delay-300 transform translate-y-10" id="hero-subtitle">Arquitetura e Design de Interiores</p>
+    </div>
+  </section>
+
+  <!-- Sobre -->
+  <section id="sobre" class="py-24">
+    <div class="container mx-auto px-6 max-w-5xl">
+      <div class="flex flex-col items-center text-center">
+        <span class="text-[var(--aura-green)] uppercase tracking-[0.5em] text-[10px] font-black mb-4">A Aura</span>
+        <h2 class="text-4xl md:text-5xl text-[var(--aura-brown)] serif">Arquitetura que acolhe, interiores que contam histórias</h2>
+        <div class="w-20 h-[1px] bg-[var(--aura-brown)] mt-8 opacity-20"></div>
+        <p class="mt-10 text-gray-500 leading-loose text-sm">
+          Projetos autorais com foco em funcionalidade, elegância e qualidade técnica — do conceito à execução.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Portfolio Grid -->
+  <section id="projetos" class="py-24">
+    <div class="container mx-auto px-6">
+      <div class="flex flex-col items-center mb-20 text-center">
+        <span class="text-[var(--aura-green)] uppercase tracking-[0.5em] text-[10px] font-black mb-4">Obras Selecionadas</span>
+        <h2 class="text-4xl md:text-5xl text-[var(--aura-brown)] serif">Excelência em cada detalhe</h2>
+        <div class="w-20 h-[1px] bg-[var(--aura-brown)] mt-8 opacity-20"></div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12" id="gallery">
+
+        <!-- Projeto 1 -->
+        <div class="project-card group cursor-pointer"
+          onclick="openModal('./projeto-cozinha-americana.jpg','Cozinha Americana','Integração, funcionalidade e elegância em um design atemporal.')">
+          <div class="img-container aspect-[4/5] shadow-2xl relative">
+            <img src="./projeto-cozinha-americana.jpg" alt="Cozinha americana contemporânea" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
+              <div class="w-12 h-12 rounded-full border border-white flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div class="mt-6">
+            <h3 class="text-lg text-[var(--aura-brown)] serif italic">Cozinha Americana</h3>
+            <p class="text-gray-400 text-[9px] uppercase tracking-widest mt-1">Design de Interiores</p>
+          </div>
+        </div>
+
+        <!-- Projeto 2 -->
+        <div class="project-card group cursor-pointer"
+          onclick="openModal('./projeto-quarto-tematico-basquete.jpg','Quarto Temático','Projeto lúdico com identidade forte e marcenaria personalizada.')">
+          <div class="img-container aspect-[4/5] shadow-2xl relative">
+            <img src="./projeto-quarto-tematico-basquete.jpg" alt="Quarto temático basquete" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
+              <div class="w-12 h-12 rounded-full border border-white flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div class="mt-6">
+            <h3 class="text-lg text-[var(--aura-brown)] serif italic">Quarto Temático</h3>
+            <p class="text-gray-400 text-[9px] uppercase tracking-widest mt-1">Interiores Residenciais</p>
+          </div>
+        </div>
+
+        <!-- Projeto 3 -->
+        <div class="project-card group cursor-pointer"
+          onclick="openModal('./projeto-fachada-residencial.jpg','Fachada Residencial','Arquitetura contemporânea com linhas limpas e volumetria equilibrada.')">
+          <div class="img-container aspect-[4/5] shadow-2xl relative">
+            <img src="./projeto-fachada-residencial.jpg" alt="Fachada residencial contemporânea" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
+              <div class="w-12 h-12 rounded-full border border-white flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div class="mt-6">
+            <h3 class="text-lg text-[var(--aura-brown)] serif italic">Fachada Residencial</h3>
+            <p class="text-gray-400 text-[9px] uppercase tracking-widest mt-1">Arquitetura</p>
+          </div>
+        </div>
+
+        <!-- Projeto 4 -->
+        <div class="project-card group cursor-pointer"
+          onclick="openModal('./projeto-area-gourmet-integrada.jpg','Área Gourmet','Espaço integrado pensado para convivência e lazer.')">
+          <div class="img-container aspect-[4/5] shadow-2xl relative">
+            <img src="./projeto-area-gourmet-integrada.jpg" alt="Área gourmet integrada" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
+              <div class="w-12 h-12 rounded-full border border-white flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div class="mt-6">
+            <h3 class="text-lg text-[var(--aura-brown)] serif italic">Área Gourmet</h3>
+            <p class="text-gray-400 text-[9px] uppercase tracking-widest mt-1">Interiores & Externa</p>
+          </div>
+        </div>
+
+        <!-- Projeto 5 -->
+        <div class="project-card group cursor-pointer"
+          onclick="openModal('./projeto-sala-apartamento.jpg','Sala de Estar','Conforto, proporção e estética em um ambiente residencial.')">
+          <div class="img-container aspect-[4/5] shadow-2xl relative">
+            <img src="./projeto-sala-apartamento.jpg" alt="Sala de estar em apartamento" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
+              <div class="w-12 h-12 rounded-full border border-white flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div class="mt-6">
+            <h3 class="text-lg text-[var(--aura-brown)] serif italic">Sala de Estar</h3>
+            <p class="text-gray-400 text-[9px] uppercase tracking-widest mt-1">Interiores Residenciais</p>
+          </div>
+        </div>
+
+        <!-- Projeto 6 -->
+        <div class="project-card group cursor-pointer"
+          onclick="openModal('./projeto-banheiro-contemporaneo.jpg','Banheiro','Sofisticação e funcionalidade aplicadas aos mínimos detalhes.')">
+          <div class="img-container aspect-[4/5] shadow-2xl relative">
+            <img src="./projeto-banheiro-contemporaneo.jpg" alt="Banheiro contemporâneo" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
+              <div class="w-12 h-12 rounded-full border border-white flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div class="mt-6">
+            <h3 class="text-lg text-[var(--aura-brown)] serif italic">Banheiro</h3>
+            <p class="text-gray-400 text-[9px] uppercase tracking-widest mt-1">Interiores</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Technical Drawing Section -->
+  <section class="py-24 bg-white border-y border-gray-100">
+    <div class="container mx-auto px-6">
+      <div class="flex flex-col lg:flex-row items-center gap-20">
+        <div class="w-full lg:w-3/5">
+          <div class="bg-gray-50 p-6 shadow-inner rounded-sm">
+            <img src="./planta-tecnica.jpg" alt="Planta Técnica" class="w-full h-auto">
+          </div>
+        </div>
+        <div class="w-full lg:w-2/5">
+          <span class="text-[var(--aura-green)] uppercase tracking-widest text-[10px] font-bold">Rigor Técnico</span>
+          <h2 class="text-4xl text-[var(--aura-brown)] serif mt-4 mb-8">Planeamento que inspira confiança</h2>
+          <p class="text-gray-500 leading-loose mb-10 text-sm">
+            Entregamos mais do que estética. Nossos cadernos técnicos garantem que a obra seja executada com precisão absoluta, desde a marcenaria até aos pontos de iluminação.
+          </p>
+          <div class="space-y-6">
+            <div class="flex items-center gap-4">
+              <div class="w-8 h-8 rounded-full bg-[var(--aura-beige)] flex items-center justify-center text-[var(--aura-brown)] text-xs font-bold">1</div>
+              <p class="text-[10px] uppercase font-bold tracking-widest">Executivos de Marcenaria</p>
+            </div>
+            <div class="flex items-center gap-4">
+              <div class="w-8 h-8 rounded-full bg-[var(--aura-beige)] flex items-center justify-center text-[var(--aura-brown)] text-xs font-bold">2</div>
+              <p class="text-[10px] uppercase font-bold tracking-widest">Memoriais Descritivos</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer id="contato" class="bg-[var(--aura-brown)] text-white py-20">
+    <div class="container mx-auto px-6 text-center">
+      <h3 class="serif text-4xl mb-10 tracking-[0.2em]">AURA</h3>
+      <p class="text-white/40 text-[10px] tracking-[0.4em] uppercase mb-16 italic">Arquitetura e Design de Interiores</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-4xl mx-auto border-t border-white/10 pt-16 mb-16">
+        <div>
+          <h4 class="text-[var(--aura-green)] uppercase text-[9px] tracking-widest mb-4">Email</h4>
+          <p class="text-sm">contato@auraarquitetura.com.br</p>
+        </div>
+        <div>
+          <h4 class="text-[var(--aura-green)] uppercase text-[9px] tracking-widest mb-4">Redes</h4>
+          <div class="flex justify-center gap-6 text-sm">
+            <a href="#" class="hover:text-[var(--aura-green)] transition-colors">Instagram</a>
+            <a href="#" class="hover:text-[var(--aura-green)] transition-colors">Pinterest</a>
+          </div>
+        </div>
+        <div>
+          <h4 class="text-[var(--aura-green)] uppercase text-[9px] tracking-widest mb-4">Localização</h4>
+          <p class="text-sm">São Paulo | Brasil</p>
+        </div>
+      </div>
+
+      <button onclick="reloadImages()" class="text-[9px] uppercase tracking-widest text-white/20 hover:text-white transition-colors border border-white/10 px-4 py-2 rounded-full">
+        Recarregar Imagens
+      </button>
+    </div>
+  </footer>
+
+  <!-- Modal Viewer -->
+  <div id="modal">
+    <div class="relative max-w-6xl w-full flex flex-col md:flex-row mx-4 bg-white rounded-sm overflow-hidden shadow-2xl">
+      <button class="absolute top-6 right-6 z-20 text-white md:text-black hover:scale-110 transition-transform" onclick="closeModal()" aria-label="Fechar modal">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+      <div class="md:w-3/4 h-[60vh] md:h-[85vh] bg-black">
+        <img id="modal-img" src="" alt="" class="w-full h-full object-contain">
+      </div>
+      <div class="md:w-1/4 p-12 flex flex-col justify-center bg-white">
+        <h3 id="modal-title" class="serif text-3xl text-[var(--aura-brown)] mb-6"></h3>
+        <p id="modal-desc" class="text-gray-400 text-sm leading-relaxed mb-10 italic"></p>
+        <div class="w-10 h-[1px] bg-[var(--aura-green)]"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Hero animations
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.getElementById('hero-title').classList.remove('opacity-0', 'translate-y-10');
+        document.getElementById('hero-subtitle').classList.remove('opacity-0', 'translate-y-10');
+      }, 100);
+    });
+
+    // Modal Logic
+    function openModal(imgSrc, title, desc) {
+      const modalImg = document.getElementById('modal-img');
+      modalImg.src = imgSrc;
+      document.getElementById('modal-title').innerText = title;
+      document.getElementById('modal-desc').innerText = desc;
+      document.getElementById('modal').style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      document.getElementById('modal').style.display = 'none';
+      document.body.style.overflow = 'auto';
+    }
+
+    // Mobile menu logic
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const closeMenuBtn = document.getElementById('close-menu');
+    const mobileMenu = document.getElementById('mobile-menu');
+    mobileMenuBtn.onclick = () => mobileMenu.classList.remove('hidden');
+    closeMenuBtn.onclick = () => mobileMenu.classList.add('hidden');
+
+    // Function to force reload images by appending a query string
+    function reloadImages() {
+      const imgs = document.querySelectorAll('img');
+      const timestamp = new Date().getTime();
+      imgs.forEach(img => {
+        const baseSrc = img.src.split('?')[0];
+        img.src = baseSrc + '?v=' + timestamp;
+      });
+    }
+
+    // ESC key close modal
+    window.onkeydown = (e) => { if (e.key === 'Escape') closeModal(); };
+  </script>
+
+</body>
+</html>
